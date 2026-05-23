@@ -1,4 +1,8 @@
 require('dotenv').config();
+// Statically require pg and pg-hstore to ensure Vercel bundles them
+require('pg');
+require('pg-hstore');
+
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
@@ -36,13 +40,13 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 5000;
 
 const start = async () => {
-  try {
-    await syncDatabase();
-  } catch (error) {
-    console.error('⚠️ Database connection/synchronization failed at startup:', error.message);
-  }
-
   if (process.env.NODE_ENV !== 'production') {
+    try {
+      await syncDatabase();
+    } catch (error) {
+      console.error('⚠️ Database connection/synchronization failed at startup:', error.message);
+    }
+
     app.listen(PORT, () => {
       console.log(`🚀 Traveloop API running on http://localhost:${PORT}`);
     });

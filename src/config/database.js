@@ -1,12 +1,9 @@
 const { Sequelize } = require('sequelize');
 require('dotenv').config();
 
-// Force the Vercel bundler (@vercel/nft) to package the pg dependency
-try {
-  require('pg');
-} catch (err) {
-  console.warn('pg package loading warning during build/static analysis:', err.message);
-}
+// Force the Vercel bundler (@vercel/nft) to package the pg/pg-hstore dependencies
+require('pg');
+require('pg-hstore');
 
 const isProduction = process.env.NODE_ENV === 'production';
 
