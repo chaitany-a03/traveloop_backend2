@@ -23,8 +23,8 @@ app.use('/api/trips/:tripId/budget', require('./src/routes/budgets'));
 app.use('/api/trips/:tripId/checklist', require('./src/routes/checklists'));
 app.use('/api/trips/:tripId/notes', require('./src/routes/notes'));
 app.use('/api/activities', require('./src/routes/activities'));
-app.use('/api/places',    require('./src/routes/googlePlacesRoutes'));
-app.use('/api/planner',   require('./src/routes/plannerRoutes'));
+app.use('/api/places', require('./src/routes/googlePlacesRoutes'));
+app.use('/api/planner', require('./src/routes/plannerRoutes'));
 app.use('/api/hidden-gems', require('./src/routes/hiddenGems'));
 
 // Health check
@@ -37,9 +37,14 @@ const PORT = process.env.PORT || 5000;
 
 const start = async () => {
   await syncDatabase();
-  app.listen(PORT, () => {
-    console.log(`🚀 Traveloop API running on http://localhost:${PORT}`);
-  });
+
+  if (process.env.NODE_ENV !== 'production') {
+    app.listen(PORT, () => {
+      console.log(`🚀 Traveloop API running on http://localhost:${PORT}`);
+    });
+  }
 };
 
 start();
+
+module.exports = app;
