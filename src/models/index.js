@@ -35,11 +35,20 @@ const syncDatabase = async () => {
   try {
     await sequelize.authenticate();
     console.log('✅ Database connected successfully');
-    await sequelize.sync({ alter: true });
-    console.log('✅ Database synchronized');
+    
+    // Only run database sync with alter: true in non-production environments
+    if (process.env.NODE_ENV !== 'production') {
+      await sequelize.sync({ alter: true });
+      console.log('✅ Database synchronized');
+    } else {
+      console.log('ℹ️ Skipping database sync in production mode');
+    }
   } catch (error) {
-    console.error('❌ Database connection failed:', error);
-    process.exit(1);
+    console.error('❌ Database connection or sync failed:', error);
+    if (process.env.NODE_ENV !== 'production') {
+      process.exit(1);
+    }
+    throw error;
   }
 };
 

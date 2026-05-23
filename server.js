@@ -36,7 +36,11 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 5000;
 
 const start = async () => {
-  await syncDatabase();
+  try {
+    await syncDatabase();
+  } catch (error) {
+    console.error('⚠️ Database connection/synchronization failed at startup:', error.message);
+  }
 
   if (process.env.NODE_ENV !== 'production') {
     app.listen(PORT, () => {
