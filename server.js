@@ -39,8 +39,8 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
-const start = async () => {
-  if (process.env.NODE_ENV !== 'production') {
+if (require.main === module) {
+  const start = async () => {
     try {
       await syncDatabase();
     } catch (error) {
@@ -50,9 +50,9 @@ const start = async () => {
     app.listen(PORT, () => {
       console.log(`🚀 Traveloop API running on http://localhost:${PORT}`);
     });
-  }
-};
+  };
 
-start();
+  start();
+}
 
 module.exports = app;
