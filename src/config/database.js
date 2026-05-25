@@ -1,8 +1,8 @@
+const pg = require('pg');
 const { Sequelize } = require('sequelize');
 require('dotenv').config();
 
 // Force the Vercel bundler (@vercel/nft) to package the pg/pg-hstore dependencies
-require('pg');
 require('pg-hstore');
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -22,10 +22,11 @@ let sequelize;
 if (process.env.DATABASE_URL) {
   sequelize = new Sequelize(process.env.DATABASE_URL, {
     dialect: 'postgres',
+    dialectModule: pg,
     logging: isProduction ? false : console.log,
     dialectOptions,
     pool: {
-      max: isProduction ? 2 : 10, // Serverless environments need a smaller connection pool limit
+      max: isProduction ? 1 : 10, // Serverless environments need a smaller connection pool limit
       min: 0,
       acquire: 30000,
       idle: 10000,
@@ -40,10 +41,11 @@ if (process.env.DATABASE_URL) {
       host: process.env.DB_HOST,
       port: process.env.DB_PORT,
       dialect: 'postgres',
+      dialectModule: pg,
       logging: isProduction ? false : console.log,
       dialectOptions,
       pool: {
-        max: isProduction ? 2 : 10,
+        max: isProduction ? 1 : 10,
         min: 0,
         acquire: 30000,
         idle: 10000,
